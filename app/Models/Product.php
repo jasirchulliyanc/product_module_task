@@ -7,12 +7,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-
+use Illuminate\Support\Facades\Storage;
 class Product extends Model
 {
-    use HasFactory, SoftDeletes ,Notifiable;
+    use HasFactory, SoftDeletes, Notifiable;
     protected $fillable = ['name', 'price', 'product_type_id', 'created_by', 'status_id'];
 
+
+    protected static function booted()
+    {
+        static::updating(function ($model) {
+            $dirty = $model->getDirty();
+            foreach ($dirty as $field => $value) {
+                $log[] = [
+                    'field' => $field,
+                    'old_value' => $model->getOriginal($field),
+                    'new_value' => $value,
+                    'updated_by' => $model->seller->name, // assuming you have authentication set up
+                    'updated_at' => now(),
+                ];
+            }
+            Storage::append('product_logs.log', json_encode($log));
+        });
+    }
     public function sendProductAddedNotification()
     {
         $user = $this->seller;
