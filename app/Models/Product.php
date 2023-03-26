@@ -2,15 +2,22 @@
 
 namespace App\Models;
 
+use App\Notifications\NewProductNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes ,Notifiable;
     protected $fillable = ['name', 'price', 'product_type_id', 'created_by', 'status_id'];
 
+    public function sendProductAddedNotification()
+    {
+        $user = $this->seller;
+        $user->notify(new NewProductNotification($this));
+    }
 
     public function seller()
     {

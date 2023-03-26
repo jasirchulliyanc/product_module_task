@@ -48,6 +48,7 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
             $product = Product::create($request->getData());
+            $product->sendProductAddedNotification();
             DB::commit();
             return response_data(true, 200, ProductResource::make($product), 'Product Created successfully!');
         } catch (Exception $e) {
