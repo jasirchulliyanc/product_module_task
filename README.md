@@ -7,8 +7,6 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## Steps to follow
-
 <h1>Steps</h1>
 <ol>
 <li>Copy <code>.env.example</code> file and rename it to <code>.env</code></li>
